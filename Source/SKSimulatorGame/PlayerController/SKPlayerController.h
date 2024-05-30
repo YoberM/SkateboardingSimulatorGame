@@ -15,8 +15,9 @@ class SKSIMULATORGAME_API ASKPlayerController : public APlayerController
 	GENERATED_BODY()
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
-
+	
 	virtual void OnPossess(APawn* InPawn) override;
+	virtual bool CanDoAction();
 	virtual	void OnMovement(const FInputActionValue& Value);
 	virtual	void OnJump(const FInputActionValue& Value);
 

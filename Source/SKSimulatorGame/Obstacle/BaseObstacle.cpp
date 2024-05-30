@@ -2,6 +2,9 @@
 
 ABaseObstacle::ABaseObstacle()
 {
+	VisualComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualComponent"));
+	VisualComponent->SetupAttachment(RootComponent);
+
 	PrimaryActorTick.bCanEverTick = true;
 
 }
@@ -9,7 +12,7 @@ ABaseObstacle::ABaseObstacle()
 void ABaseObstacle::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void ABaseObstacle::Tick(float DeltaTime)
