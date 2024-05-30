@@ -11,7 +11,9 @@ class SKSIMULATORGAME_API ABaseObstacle : public AActor
 	
 public:	
 	ABaseObstacle();
-
+	
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* VisualComponent {nullptr};
 protected:
 	virtual void BeginPlay() override;
 
