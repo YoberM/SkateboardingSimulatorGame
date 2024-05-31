@@ -32,9 +32,11 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"),Transient)
 	USpringArmComponent* SpringArm;
-
+	
 	UPROPERTY(EditAnywhere)
-	float RotationFactor { 1.0f };
+	float MinRotationFactor { 1.0f };
+	UPROPERTY(EditAnywhere)
+	float MaxRotationFactor { 1.0f };
 
 	UPROPERTY(EditAnywhere)
 	ESKCharacterState CharacterState { ESKCharacterState::Idle };
@@ -51,6 +53,7 @@ public:
 	virtual bool CanDoMovement();
 	virtual bool CanDoJump();
 	virtual	void OnMovement(const FInputActionValue& Value);
+	virtual	float CalculateRotation(const FInputActionValue& Value);
 	virtual	void OnJump(const FInputActionValue& Value);
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
