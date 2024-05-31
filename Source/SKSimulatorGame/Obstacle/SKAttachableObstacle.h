@@ -30,8 +30,6 @@ public:
     float InitialVelocity { 1.0f };
 private:
 	UFUNCTION()
-	virtual void BeginPlay() override;
-	UFUNCTION()
 	virtual void OnConstruction(const FTransform& Transform) override;
 	UFUNCTION()
 	virtual void Tick(float DeltaTime) override;
