@@ -94,12 +94,22 @@ void ASKCharacter::OnMovement(const FInputActionValue& Value)
 		FVector Direction = FVector(Value.Get<FVector2D>(),0.0f);
 	    FVector ForwardDirection = GetActorForwardVector() * Direction.X;
 		GetMovementComponent()->AddInputVector(ForwardDirection);
-		AddActorLocalRotation(FRotator(0,Direction.Y * RotationFactor,0),false,nullptr,ETeleportType::TeleportPhysics);
+		AddActorLocalRotation(FRotator(0, Direction.Y * CalculateRotation(Value),0),false,nullptr,ETeleportType::TeleportPhysics);
 	}
 	else
 	{
 		
 	}
+}
+
+float ASKCharacter::CalculateRotation(const FInputActionValue& Value)
+{
+	float VelocityRate = GetVelocity().Size2D() / GetMovementComponent()->GetMaxSpeed();
+	float RotationRate = FMath::InterpEaseIn(MinRotationFactor,MaxRotationFactor,VelocityRate,2);
+	// Debbuging texts
+	GEngine->AddOnScreenDebugMessage(-1, 0.001f, FColor::Red, FString::Printf(TEXT("VelocityRate: %f"), VelocityRate));
+	GEngine->AddOnScreenDebugMessage(-1, 0.001f, FColor::Red, FString::Printf(TEXT("RotationRate: %f"), RotationRate));
+	return RotationRate;
 }
 
 void ASKCharacter::OnJump(const FInputActionValue& Value)

@@ -5,6 +5,8 @@
 
 ASKAttachableObstacle::ASKAttachableObstacle()
 {
+	VisualComponent->SetupAttachment(RootComponent);
+
 	AttachableMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AttachableMesh"));
 	AttachableMesh->SetupAttachment(RootComponent);
 	AttachableMesh->SetMobility(EComponentMobility::Static);
