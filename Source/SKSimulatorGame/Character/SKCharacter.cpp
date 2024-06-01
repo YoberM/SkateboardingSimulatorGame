@@ -35,7 +35,6 @@ void ASKCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	FVector Velocity = GetVelocity();
-	GEngine->AddOnScreenDebugMessage(-1, 0.001f, FColor::Red, FString::Printf(TEXT("Velocity: %s, %f"), *Velocity.ToString(), Velocity.Size2D()));
 }
 
 bool ASKCharacter::CanDoAction()
@@ -106,9 +105,6 @@ float ASKCharacter::CalculateRotation(const FInputActionValue& Value)
 {
 	float VelocityRate = GetVelocity().Size2D() / GetMovementComponent()->GetMaxSpeed();
 	float RotationRate = FMath::InterpEaseIn(MinRotationFactor,MaxRotationFactor,VelocityRate,2);
-	// Debbuging texts
-	GEngine->AddOnScreenDebugMessage(-1, 0.001f, FColor::Red, FString::Printf(TEXT("VelocityRate: %f"), VelocityRate));
-	GEngine->AddOnScreenDebugMessage(-1, 0.001f, FColor::Red, FString::Printf(TEXT("RotationRate: %f"), RotationRate));
 	return RotationRate;
 }
 
