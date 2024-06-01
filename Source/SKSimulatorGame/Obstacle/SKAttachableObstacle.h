@@ -15,7 +15,7 @@ class SKSIMULATORGAME_API ASKAttachableObstacle : public ABaseObstacle
 	ASKAttachableObstacle();
 public:
 	UPROPERTY(VisibleAnywhere)
-	AActor* SKCharacter {nullptr};
+	ASKCharacter* SKCharacter {nullptr};
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* AttachableMesh {nullptr};
 	UPROPERTY(EditAnywhere)
@@ -27,7 +27,12 @@ public:
 	UPROPERTY(EditAnywhere)
     float VelocityFactor { 5.0f };
 	UPROPERTY(EditAnywhere)
-    float InitialVelocity { 1.0f };
+    FVector InitialVelocity { FVector::ZeroVector };
+	UFUNCTION()
+	virtual void AttachCharacterToObstacle(ASKCharacter* CharacterToAttach);
+	UFUNCTION()
+	virtual void UnAttachActor(float DeltaTime);
+
 private:
 	UFUNCTION()
 	virtual void OnConstruction(const FTransform& Transform) override;
@@ -35,8 +40,7 @@ private:
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	UFUNCTION()
-	virtual void AttachCharacterToObstacle(ASKCharacter* CharacterToAttach);
+
 	UFUNCTION()
 	virtual void HandleActorOnAttach(float DeltaTime);
 };

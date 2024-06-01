@@ -1,5 +1,3 @@
-
-
 #include "SKCharacter.h"
 
 #include "InputActionValue.h"
@@ -7,8 +5,11 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "SKSimulatorGame/Gamemode/SKGameMode.h"
+#include <SKSimulatorGame/PointSystem/PointSystem.h>
 
-
+#include "SKSimulatorGame/Obstacle/BaseObstacle.h"
+#include "SKSimulatorGame/Obstacle/SKAttachableObstacle.h"
 
 ASKCharacter::ASKCharacter()
 {
@@ -36,7 +37,9 @@ void ASKCharacter::BeginPlay()
 void ASKCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FVector Velocity = GetVelocity();
+	HandleVelocity(DeltaTime);
+	HandleReattachment(DeltaTime);
+
 }
 
 bool ASKCharacter::CanDoAction()
@@ -88,6 +91,28 @@ bool ASKCharacter::CanDoJump()
 	return false;
 }
 
+void ASKCharacter::HandleReattachment(float DeltaTime)
+{
+	ReattachmentDelayDT -= DeltaTime;
+}
+
+void ASKCharacter::HandleVelocity(float DeltaTime)
+{
+	FVector Velocity = GetVelocity();
+	if (Velocity.Size() >= HighVelocityFactor * GetMovementComponent()->GetMaxSpeed())
+	{
+		OnHighVelocity(DeltaTime);
+	}
+}
+
+void ASKCharacter::OnHighVelocity(float DeltaTime)
+{
+	if (ASKGameMode* GameMode = ASKGameMode::GetSKGameMode(GetWorld()))
+	{
+		GameMode->NotifyPointSystem(EPointsEvent::HighVelocity, DeltaTime );
+	}
+}
+
 void ASKCharacter::OnMovement(const FInputActionValue& Value)
 {
 	if (CanDoAction())
@@ -114,6 +139,14 @@ void ASKCharacter::OnJump(const FInputActionValue& Value)
 {
 	if (CanJump())
 	{
+		if (ASKAttachableObstacle* AttachableObstacle = Cast<ASKAttachableObstacle>(AttachedObstacle))
+		{
+			AttachableObstacle->UnAttachActor(0.0f);
+			if(ASKGameMode* GameMode = ASKGameMode::GetSKGameMode(GetWorld()))
+			{
+				GameMode->NotifyPointSystem(EPointsEvent::JumpOnAttachedObstacle);
+			}
+		}
 		Jump();
 		OnJumpEvent.Broadcast();
 	}
@@ -143,5 +176,21 @@ void ASKCharacter::SetCharacterState(ESKCharacterState NewCharacterState)
 		break;
 	}
 	CharacterState = NewCharacterState;
+}
+
+void ASKCharacter::SetAttachToObstacle(ABaseObstacle* Obstacle)
+{
+	ReattachmentDelayDT = ReattachmentDelay;
+	if (Obstacle == nullptr)
+	{
+		AttachedObstacle.Reset();
+		return;
+	}
+
+	AttachedObstacle = Obstacle;
+	if(ASKGameMode* GameMode = ASKGameMode::GetSKGameMode(GetWorld()))
+	{
+		GameMode->NotifyPointSystem(EPointsEvent::ObstacleAttached);
+	}
 }
 
