@@ -1,9 +1,11 @@
 #include "SKPlayerController.h"
-
 #include "EnhancedInputComponent.h"
 #include "SKSimulatorGame/Character/SKCharacter.h"
 #include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
+#include "Blueprint/UserWidget.h"
+#include "SKSimulatorGame/Gamemode/SKGameMode.h"
+#include "SKSimulatorGame/UI/Controller/SKPlayerUIController.h"
 
 void ASKPlayerController::BeginPlay()
 {
@@ -11,6 +13,27 @@ void ASKPlayerController::BeginPlay()
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(InputMappingContext, 0);
+	}
+	if (PlayerUIControllerClass)
+	{
+		PlayerUIControllerInstance = NewObject<USKPlayerUIController>(this,PlayerUIControllerClass);
+		PlayerUIControllerInstance->Initialize(this);
+	}
+}
+
+void ASKPlayerController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (PlayerUIControllerInstance)
+	{
+		// Temporally set score to 0
+		PlayerUIControllerInstance->UpdateScore(0.0f);
+		PlayerUIControllerInstance->UpdateSpeed(SKCharacter->GetVelocity().Size());
+		// Global properties
+		if (ASKGameMode* GameMode = ASKGameMode::GetSKGameMode(GetWorld()))
+		{
+			PlayerUIControllerInstance->UpdateTotalTime(GameMode->GetTotalTime());
+		}
 	}
 }
 

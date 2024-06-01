@@ -4,6 +4,8 @@
 #include "GameFramework/PlayerController.h"
 #include "SKPlayerController.generated.h"
 
+class USKPlayerUIController;
+class USKPlayerUIView;
 class UInputMappingContext;
 class UInputAction;
 class ASKCharacter;
@@ -14,6 +16,7 @@ class SKSIMULATORGAME_API ASKPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
 	
 	virtual void OnPossess(APawn* InPawn) override;
@@ -31,6 +34,11 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* JumpAction;
-	
+
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<ASKCharacter> SKCharacter;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<USKPlayerUIController> PlayerUIControllerClass;
+	UPROPERTY(VisibleAnywhere)
+	USKPlayerUIController* PlayerUIControllerInstance;
 };
