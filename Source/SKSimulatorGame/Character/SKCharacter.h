@@ -4,6 +4,8 @@
 #include "GameFramework/Character.h"
 #include "SKCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnJumpEvent);
+
 class UInputAction;
 struct FInputActionValue;
 class UInputComponent;
@@ -43,6 +45,8 @@ public:
 
 	ASKCharacter();
 
+	UPROPERTY(BlueprintAssignable)
+	FOnJumpEvent OnJumpEvent;
 protected:
 	virtual void BeginPlay() override;
 
