@@ -4,6 +4,8 @@
 #include "GameFramework/Actor.h"
 #include "BaseObstacle.generated.h"
 
+enum class EPointsEvent : uint8;
+
 UCLASS()
 class SKSIMULATORGAME_API ABaseObstacle : public AActor
 {
@@ -19,5 +21,8 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
+	virtual void NotifyPointSystem();
+
+	EPointsEvent PointsEventOnAttach { 0 };
 
 };

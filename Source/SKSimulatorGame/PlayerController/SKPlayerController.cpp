@@ -5,6 +5,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
 #include "SKSimulatorGame/Gamemode/SKGameMode.h"
+#include "SKSimulatorGame/PointSystem/PointSystem.h"
 #include "SKSimulatorGame/UI/Controller/SKPlayerUIController.h"
 
 void ASKPlayerController::BeginPlay()
@@ -27,11 +28,11 @@ void ASKPlayerController::Tick(float DeltaTime)
 	if (PlayerUIControllerInstance)
 	{
 		// Temporally set score to 0
-		PlayerUIControllerInstance->UpdateScore(0.0f);
 		PlayerUIControllerInstance->UpdateSpeed(SKCharacter->GetVelocity().Size());
 		// Global properties
 		if (ASKGameMode* GameMode = ASKGameMode::GetSKGameMode(GetWorld()))
 		{
+			PlayerUIControllerInstance->UpdateScore(GameMode->GetPointSystem()->GetScore());
 			PlayerUIControllerInstance->UpdateTotalTime(GameMode->GetTotalTime());
 		}
 	}
@@ -44,7 +45,7 @@ void ASKPlayerController::SetupInputComponent()
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
 	{
 		EnhancedInputComponent->BindAction(MovementAction, ETriggerEvent::Triggered, this, &ASKPlayerController::OnMovement);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ASKPlayerController::OnJump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ASKPlayerController::OnJump);
 
 	}	
 }
