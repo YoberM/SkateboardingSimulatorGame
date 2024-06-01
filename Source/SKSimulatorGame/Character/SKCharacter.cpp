@@ -8,12 +8,14 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
+
+
 ASKCharacter::ASKCharacter()
 {
  	PrimaryActorTick.bCanEverTick = true;
 	
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Front Spring Arm"));
-	SpringArm->SetupAttachment(GetMesh());
+	SpringArm->SetupAttachment(RootComponent);
 	SpringArm->TargetArmLength = 0.0f;
 	SpringArm->bDoCollisionTest = false;
 	SpringArm->bEnableCameraRotationLag = true;
@@ -113,6 +115,7 @@ void ASKCharacter::OnJump(const FInputActionValue& Value)
 	if (CanJump())
 	{
 		Jump();
+		OnJumpEvent.Broadcast();
 	}
 	else
 	{
