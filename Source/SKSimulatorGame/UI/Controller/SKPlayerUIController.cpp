@@ -1,6 +1,6 @@
+#include "SKPlayerUIController.h"
 #include "SKSimulatorGame/UI/Model/SKPlayerUIModel.h"
 #include "SKSimulatorGame/UI/View/SKPlayerUIView.h"
-#include "SKPlayerUIController.h"
 
 void USKPlayerUIController::Initialize(APlayerController* PlayerController)
 {
